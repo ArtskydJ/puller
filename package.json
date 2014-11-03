@@ -1,0 +1,33 @@
+{
+  "name": "puller",
+  "version": "0.0.5",
+  "description": "git pull all repositories in the directory",
+  "main": "./index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ArtskydJ/puller.git"
+  },
+  "homepage": "http://github.com/ArtskydJ/puller",
+  "keywords": [
+    "git",
+    "sync",
+    "pull",
+    "all",
+    "repos"
+  ],
+  "scripts": {
+    "test": ""
+  },
+  "author": {
+    "name": "Joseph Dykstra",
+    "email": "josephdykstra@gmail.com",
+    "url": "http://josephdykstra.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArtskydJ/puller/issues"
+  },
+  "devDependencies": {},
+  "dependencies": {
+  }
+}
