@@ -1,5 +1,6 @@
 {
   "exclude": [
-    "CPP_Examples"
+    "CPP_Examples",
+    "petulant-octo-sansa"
   ]
 }
