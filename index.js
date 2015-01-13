@@ -4,37 +4,43 @@ var fs = require('fs')
 var each = require('each-series')
 var config = require('./config.json')
 config.exclude = config.exclude || []
-var gitPath = process.argv[2] || process.cwd() || './'
-var resolve = path.resolve.bind(null, gitPath)
+var repoPath = (process ? (process.argv[2] ||  process.cwd()) : './')
+var resolve = path.resolve.bind(null, repoPath)
 var errorMessages = {
-	1: '\n\tNo remote repository specified',
-	128: '\n\tNot a git repository',
-	'ENOENT': '\n\tNot found',
-	null: ''
+	1: 'No remote repository specified',
+	128: 'Not a git repository',
+	'ENOENT': 'Not found',
+	null: '',
+	undefined: ''
 }
 
 function noop() {}
 
-function gitPull(path, cb) {
-	return exec('git pull -q', { cwd: path }, cb)
+function execGitPull(relativeDir, cb) {
+	function end(err) { cb(err); cb = noop }
+	exec('git pull -q', { cwd: resolve(relativeDir) }, end) //.on('error', end)
 }
 
-function gitPullDir(dir, i, done) {
-	var fullDir = resolve(dir)
-	gitPull(fullDir, function (err, text) {
-		console.log( dir, errorMessages[ err && err.code] )
-		done() //(err)
+function gitPullDir(relativeDir, i, done) {
+	execGitPull(relativeDir, function (err, text) {
+		var errLikeObj = err || {message:''}
+		var message = errorMessages[errLikeObj.code] || errLikeObj.message
+		console.log(relativeDir, (message ? '\n\t' + message : ''))
+		done(err)
 	})
-	.on('error', console.log.bind(console, fullDir, 'error'))
 }
 
-fs.readdir( gitPath, function (err, filesAndDirs) {
-	var dirs = filesAndDirs.filter(function (fileOrDir) {
-		return (
-			fs.statSync(resolve(fileOrDir)).isDirectory() && //keep it if it is a directory
-			config.exclude.indexOf(fileOrDir) === -1 //keep it if it is not excluded
-		)
+function includedDirs(filesAndDirs) {
+	return filesAndDirs.filter(function (fileOrDir) {
+		return fs.statSync(resolve(fileOrDir)).isDirectory()
+	}).filter(function (dir) {
+		return config.exclude.indexOf(dir) === -1
 	})
+}
 
-	each(dirs, gitPullDir, noop)
+var finish = noop //don't handle errors
+
+fs.readdir(repoPath, function (err, filesAndDirs) {
+	if (err) finish(err)
+	else each(includedDirs(filesAndDirs), gitPullDir, finish)
 })

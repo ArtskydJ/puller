@@ -1,8 +1,10 @@
 {
   "name": "puller",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "git pull all repositories in the directory",
   "main": "./index.js",
+  "bin": "./index.js",
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "git://github.com/ArtskydJ/puller.git"

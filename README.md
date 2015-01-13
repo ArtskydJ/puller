@@ -1,8 +1,14 @@
 # Puller
-Git pull all repos in a directory using node
+Git pull all repos in a directory via the command line
 
+#install
 ```
-> node index.js C:\Github
+npm install -g puller
+```
+
+#example
+```
+> puller C:\Github
 admesh-parser
 array-math
 config
@@ -14,3 +20,9 @@ leading-chars
 tiny-level-ttl
 >
  ```
+
+Supply the path or it will use the current directory.
+
+#license
+
+[VOL](http://veryopenlicense.com)
